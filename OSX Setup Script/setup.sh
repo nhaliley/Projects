@@ -3,8 +3,6 @@
 
 'Script is inteded to run configuration and setup on new OSX machines.
 
-- Chmod 755 this script and [sudo ./[script].sh]
-
 TODO:
 [ ] Install FireFox over CLI along woith extensions such as:
 -LastPass
@@ -15,10 +13,10 @@ TODO:
 [ ] Configure iCloud settings from CLI to disable all. (perhaps not sign into it during setup?)
 [ ] Change wallpaper
 [ ] Change screensaver
-[ ] Change the name of the computer with user input
+[X] Change the name of the computer with user input
 [X] Firewall settings
 [X] Change the name of unit
-[ ] Setup techical user
+[ ] Setup technical user
 [ ] Brew install virtual box (issue: Cannot set dev approval from CLI)
 [X] Place all apps from brew into the Dock
 
@@ -86,6 +84,19 @@ configurations(){
   printf "Setting up automatic updates"
   sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled YES
 
+'
+  This does not work. The images get moved and renamed but the wallpaper stays the same.
+
+  printf "New wallpaper incoming"
+  sudo mv /Library/Desktop\ Pictures/Mojave.heic Backup.heic
+  sudo mv ~/Desktop/Moon.jpg /Library/Desktop\ Pictures/Moon.jpg
+  #osascript -e 'tell application "Finder" to set desktop picture to POSIX file "~/Desktop/wallpaper.jpg"'
+'
+
+}
+
+additionalPackages(){
+
 }
 
 hottestCornerOnTheMac(){
@@ -99,7 +110,6 @@ hottestCornerOnTheMac(){
 
 installBrew(){
   printf "\n Preparing to install Brew \n"
-  sleep 5s
 
   #installing brew
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
