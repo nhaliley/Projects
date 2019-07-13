@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#Testing this to see if the screen saver settings will get updated.
+
 'The sudo -v option will prompt for the root password. This will allow for the installer to run as root.
 
 Leave the .dmg plus script file on the desktop or change the dir you wish to work from'
