@@ -90,7 +90,7 @@ installApps(){
  		if [ "$i" == "homebrew-cask" ]
  		then
  			yes | su $user -c '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"' >/dev/null 2>>/tmp/Brew-Install-Log.txt
-			su $user -c "brew tap caskroom/cask" >/dev/null
+			su $user -c "brew tap caskroom/cask" >/dev/null 2>>/tmp/Brew-Install-Log.txt
  		else
  			yes | su $user -c "brew cask install $i --appdir=/Applications" >/dev/null 2>>/tmp/Brew-Install-Log.txt
  		fi
