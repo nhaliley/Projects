@@ -72,9 +72,9 @@ appsRemoved=('Automator'
 	'Messages'
 	'News'
 	'Notes'
-	'Photo\ Booth'
+	'Photo Booth'
 	'Preview'
-	'QuickTime\ Player'
+	'QuickTime Player'
 	'Reminders'
 	'Safari'
 	'Siri'
@@ -90,7 +90,7 @@ installApps(){
  		if [ "$i" == "homebrew-cask" ]
  		then
  			yes | su $user -c '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"' >/dev/null 2>>/tmp/Brew-Install-Log.txt
-			su $user -c "brew tap caskroom/cask" >/dev/null 2>>/tmp/Brew-Install-Log.txt
+			su $user -c "brew tap caskroom/cask" >/dev/null
  		else
  			yes | su $user -c "brew cask install $i --appdir=/Applications" >/dev/null 2>>/tmp/Brew-Install-Log.txt
  		fi
@@ -104,17 +104,17 @@ newDock(){
 	echo -e "  \033[93mAdding applications to dock.\033[0m"
 	for i in "${appsDocked[@]}"; do
 		echo -e "   $yellow ➔ $white $i"
-		su $user -c "defaults write com.apple.dock persistent-apps -array-add \"<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/$i.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>\"" >/dev/null 2>>/tmp/Brew-Install-Log.txt
+		su $user -c "defaults write com.apple.dock persistent-apps -array-add \"<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/i.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>\"" >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	done
 	killall Dock
 }
 
 removeBloatware(){
 	line
-	echo -e "  \033[93mUninstalling applications.\033[0m"
+	echo -e " $yellow Uninstalling applications.$white"
 	for i in "${appsRemoved[@]}"; do
-		echo -e "   $yellow ➔ $white $i" | sed 's|\\||g'
-		rm -rf /Applications/$i.app >/dev/null 2>>/tmp/Brew-Install-Log.txt
+		echo -e "   $yellow ➔ $white $i"
+		rm -rf /Applications/"${i}".app >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	done
 }
 
@@ -126,7 +126,7 @@ removeOneDrive(){
 
 checkErrors(){
 	line
-	ERROR=$(echo $(</tmp/Brew-Install-Log.txt) | sed 's/Updating Homebrew...//g')
+	ERROR=$(echo $(</tmp/Brew-Install-Log.txt) | sed -e 's/Updating Homebrew...//g' -e 's/Cloning into.*//g' -e 's/Checking out files.*//g')
 	size=$(echo -n $ERROR | wc -m)
 	if [ $size -gt 0 ]
 	then
