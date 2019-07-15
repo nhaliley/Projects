@@ -170,7 +170,7 @@ preReqs(){
 	else
 		echo -e "$green    Root detected.$white"
 	fi
-	user=$(users)
+	user=$(users | sed 's/_.* //g')
 	echo -e "$green    User profile(s) effected:$yellow $user$white"
 }
 
