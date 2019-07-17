@@ -1,0 +1,19 @@
+Command locations for conversion
+
+csrutil is /usr/bin/csrutil
+whoami is /usr/bin/whoami
+users is /usr/bin/users
+rm is /bin/rm
+/dev/null
+/tmp/Brew-Install-Log.txt
+echo is a shell builtin
+echo is /bin/echo
+sed is /usr/bin/sed
+clear is /usr/bin/clear
+curl is /usr/bin/curl
+/usr/bin/ruby
+brew is /usr/local/bin/brew
+
+/Volumes/macOS/usr/local/bin/
+
+brew /Volumes/macOS/usr/local/Homebrew/bin/brew

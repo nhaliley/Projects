@@ -2,23 +2,37 @@
 
 #Tested and working on 10.14
 #Apps going onto the Dock have to be renamed as their app name in the apps directory
+#Create a log file at /tmp/Brew-Install-Log.txt
+#preReq function is required to install apps since it grabs the current user (should be root).
 
-appsInstall=('firefox'
+main(){
+	defineColors
+	preReqs
+	removeBloatware
+	installApps
+	removeOneDrive
+	newDock
+	checkErrors
+}
+
+appsInstall=('homebrew-cask'
+	'atom'
+	'colloquy'
+	'firefox'
 	'google-chrome'
-	'virtualbox'
-	'veracrypt'
-	'tunnelblick'
-	'sublime-text'
 	'iterm2'
-	'remote-desktop-manager-free'
-	'seafile-client'
 	'microsoft-office'
 	'microsoft-teams'
+	'remote-desktop-manager-free'
+	'seafile-client'
+	'sublime-text'
+	'tunnelblick'
+	'veracrypt'
+	'virtualbox'
 	'vlc'
-	'xmind'
-	'xquartz'
 	'wireshark'
-	'colloquy')
+	'xmind'
+	'xquartz')
 
 appsDocked=('Launchpad'
 	'App Store'
@@ -30,17 +44,20 @@ appsDocked=('Launchpad'
 	'Microsoft Excel'
 	'Microsoft PowerPoint'
 	'Firefox'
+	'Google Chrome'
 	'Calculator'
 	'VirtualBox'
 	'Mission Control'
 	'Veracrypt'
+	'Atom'
 	'Sublime Text'
-	'iTerm'
 	'Seafile Client'
 	'XMind'
 	'Wireshark'
 	'Colloquy'
-	'Remote Desktop Manager Free')
+	'Remote Desktop Manager Free'
+	'iTerm'
+	'Utilities/Terminal')
 
 appsRemoved=('Automator'
  	'Books'
@@ -55,9 +72,9 @@ appsRemoved=('Automator'
 	'Messages'
 	'News'
 	'Notes'
-	'Photo\ Booth'
+	'Photo Booth'
 	'Preview'
-	'QuickTime\ Player'
+	'QuickTime Player'
 	'Reminders'
 	'Safari'
 	'Siri'
@@ -65,91 +82,111 @@ appsRemoved=('Automator'
 	'Stocks'
 	'VoiceMemos')
 
-
-installBrew(){
-	echo $line
-	echo "  Installing homebrew-cask."
-	yes | su $user -c '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"' >/dev/null 2>>/tmp/Brew-Install-Log.txt
-	su $user -c "brew tap caskroom/cask" >/dev/null 2>>/tmp/Brew-Install-Log.txt
-}
 installApps(){
-	echo $line
-	echo "  Installing applications."
+	line
+	echo -e "  \033[93mInstalling applications.\033[0m"
  	for i in "${appsInstall[@]}"; do
- 		echo "    $i"
-		su $user -c "brew cask install $i --appdir=/Applications" >/dev/null 2>>/tmp/Brew-Install-Log.txt
+ 		echo -e "   $yellow ➔ $white $i"
+ 		if [ "$i" == "homebrew-cask" ]
+ 		then
+ 			yes | su $user -c '/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"' >/dev/null 2>>/dev/null
+			su $user -c "brew tap caskroom/cask" >/dev/null 2>>/dev/null
+ 		else
+ 			yes | su $user -c "brew cask install $i --appdir=/Applications" >/dev/null 2>>/tmp/Brew-Install-Log.txt
+ 		fi
 	done
 }
 
 newDock(){
+	line
 	#Clears the dock
 	su $user -c 'defaults write com.apple.dock persistent-apps -array'
-	echo $line
-	echo "  Adding applications to dock."
+	echo -e "  \033[93mAdding applications to dock.\033[0m"
 	for i in "${appsDocked[@]}"; do
-		echo "    $i"
+		echo -e "   $yellow ➔ $white $i"
 		su $user -c "defaults write com.apple.dock persistent-apps -array-add \"<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>/Applications/$i.app</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>\"" >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	done
 	killall Dock
 }
 
 removeBloatware(){
-	echo $line
-	echo "  Removing applications."
+	line
+	echo -e " $yellow Uninstalling applications.$white"
 	for i in "${appsRemoved[@]}"; do
-		echo "    $i"
-		rm -rf /Applications/$i.app >/dev/null 2>>/tmp/Brew-Install-Log.txt
+		echo -e "   $yellow ➔ $white $i"
+		rm -rf /Applications/"${i}".app >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	done
 }
 
 removeOneDrive(){
-	echo $line
-	echo "  Removing OneDrive."
+	line
+	echo -e "$yellow  Uninstalling OneDrive.$white"
 	rm -rf /Applications/OneDrive.app >/dev/null 2>>/tmp/Brew-Install-Log.txt
 }
 
 checkErrors(){
-	 ERROR=$(</tmp/Error)
-	 RED='\033[0;31m'
-	 NC='\033[0m'
-	 if [ ${#ERROR} -gt 0 ]
-	 	echo $line
-	 then
-	 	echo -e "  \033[31;5;4;1mOperation completed with errors.\033[0m"
-	 	echo -e "  \033[31mCheck /tmp/Brew-Install-Log.txt\033[0m"
-	 else
-	 	echo -e "\033[32m  Operation completed without errors.\033[0m"
+	line
+	ERROR=$(echo $(</tmp/Brew-Install-Log.txt) | sed -e 's/Updating Homebrew...//g' -e 's/Cloning into.*//g' -e 's/Checking out files.*//g')
+	size=$(echo -n $ERROR | wc -m)
+	if [ $size -gt 0 ]
+	then
+		echo -e "  ${redBU}Operation completed with errors.$white"
+	 	echo -e " $red Check /tmp/Brew-Install-Log.txt$white"
+	else
+	 	echo -e " ${greenB} Operation completed without errors.$white"
 	 	rm /tmp/Brew-Install-Log.txt
-	 fi
+	fi
+	line
 }
 
-line="-----------------------------------------------"
-clear
-if [ "$(csrutil status)" == "System Integrity Protection status: disabled." ]
-then
-	echo $line
-	echo "  System Integrity Protection (SIP) disabled."
-	echo "  Proceeding with operation."
-	echo $line
-	user=$(users)
-	echo "  Current user: $user"
-	removeBloatware
-	installBrew
-	installApps
-	removeOneDrive
-	newDock
-	checkErrors
-	echo $line
-else
-	echo $line
-	echo "  System Integrity Protection (SIP) enabled."
-	echo "  Unable to proceed with operation."
-	echo $line
-	echo "  Steps to disable..."
-	echo "    1. Boot into recovery mode"
-	echo "    2. Open terminal through utilities mennu."
-	echo "    3. Enter the following command"
-	echo "       csrutil disable"
-	echo "    4. Reboot and rerun this script."
-	echo $line
-fi
+preReqs(){
+	clear
+	rm /tmp/Brew-Install-Log.txt &> /dev/null
+	echo ""
+	line
+	echo -e "$yellow  Prereq checks...$white"
+	if [ "$(csrutil status)" == "System Integrity Protection status: disabled." ]
+	then
+		echo -e "$green    System Integrity Protection (SIP) disabled.$white"
+	else
+		line
+		echo -e "$red    System Integrity Protection (SIP) enabled.$white"
+		echo  -e "$red    Unable to proceed with operation. $white"
+		line
+		echo "  Steps to disable..."
+		echo "      1. Boot into recovery mode"
+		echo "      2. Open terminal through utilities mennu."
+		echo "      3. Enter the following command"
+		echo "         csrutil disable"
+		echo "      4. Reboot and run this script again."
+		line
+		exit
+	fi
+	if [ "$(whoami)" != "root" ]
+	then
+		echo -e "$red    Non root user! Execute script with sudo.$white"
+		line
+		exit
+	else
+		echo -e "$green    Root detected.$white"
+	fi
+	user=$(users | sed 's/_.* //g')
+	echo -e "$green    User profile(s) effected:$yellow $user$white"
+}
+
+defineColors(){
+	red="\033[31m"
+	green="\033[92m"
+	yellow="\033[93m"
+	white="\033[0m"
+	redBU="\033[31;4;1m"
+	greenB="\033[32;1m"
+	underline="\033[4m"
+}
+
+line(){
+	echo -e "$underline                                                     $white"
+	echo ""
+}
+
+main
