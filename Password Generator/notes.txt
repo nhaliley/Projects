@@ -1,0 +1,23 @@
+
+
+So far everything seems to be working.
+
+I can gen a password and append it to a file. I can then encrypt the file with
+a user generated password.
+
+I can also decrypt the file and view it. The content it hashed and with a salt. Sick.
+
+There are a few things I need to consider now...
+
+1. Can this hash be cracked?
+2. Malware that steals what has be added to the clipboard?
+
+-------
+
+Things I need to add and work on:
+
+1. After adding onto the password file, there needs to be a way to delete it for
+security reasons.
+2. Need to format the password file that adds website, email, and password.
+3. A backup method for this file. Since users can see this file, what happens
+if they delete it? Can we make a hidden backup somewhere secure? 
