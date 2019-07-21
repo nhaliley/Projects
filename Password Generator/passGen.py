@@ -9,12 +9,13 @@ decrypt that file for viewing.
 Free to use and mod.
 
 '''
-password = '1' + "\n"
+password = ''
 
 def passwordGenerator():
     ## TODO:
     # - need to add bad chars to be excluded
     # - add parameter for char length
+    global password
 
     length = 32
     chars = string.ascii_letters + string.digits + '!@#$%^&*()'
@@ -28,11 +29,12 @@ def passwordGenerator():
 
 def appendToFile():
     ## TODO:
-    # - not appending the text to new lines.
-    # - Not reading from the password variable
+    
 
     with open("secret.txt", "ab") as myfile:
-        myfile.write(password)
+        global password
+
+        myfile.write(password + "\n")
 
 def encryptFile():
     print("encrypt")
