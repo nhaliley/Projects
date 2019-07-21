@@ -2,18 +2,6 @@
 
 #Random password generator that copies to a clipboard
 
-'
-TODO:
-
-[X] Varibale to name text file
-[X] Function to encrypt text file
-[X] Function to decrypt text file
-[X] Function to append into the txt file
-[] PGP way of encrypting the file maybe?
-[] yeet
-
-
-'
 FILE=secure.txt
 printf "Select an option: [gen/view] \n"
 read answer
@@ -31,4 +19,6 @@ elif [[ $answer == "view" ]]; then
 
   openssl enc -aes-256-cbc -d -in file.txt.enc -out yeet.txt
   cat yeet.txt
+  rm yeet.txt
+
 fi
