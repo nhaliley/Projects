@@ -3,6 +3,7 @@
 #Random password generator that copies to a clipboard
 
 FILE=secure.txt
+
 printf "Select an option: [gen/view] \n"
 read answer
 
