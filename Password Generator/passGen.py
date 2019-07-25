@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 '''
-Python 3.6+ based password generator. The main purpose of this program is
+Python based password generator. The main purpose of this program is
 to generate new passwords and save them to a text file. Then encrypt that file and/or
 decrypt that file for viewing.
 
@@ -29,7 +29,7 @@ TODO:
 [] Save the generated key to a file and use that as an input instead a global variable
 [] Create a separate file to run the crypto functions
 [] Run the logic in a loop until user states to exit
-
+[] Sudo password to gen key?
 '''
 
 
