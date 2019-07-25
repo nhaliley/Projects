@@ -1,4 +1,15 @@
-import os, random, string
+import random
+import string
+import os
+
+#These imports are needed for crypto
+import cryptography
+from cryptography.fernet import Fernet
+import base64
+import os
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 '''
@@ -8,9 +19,22 @@ decrypt that file for viewing.
 
 Free to use and mod.
 
+Credit to: https://nitratine.net/blog/post/encryption-and-decryption-in-python/
+For help with encryption and decryption code
+
 '''
 
+'''
+TODO:
+[] Save the generated key to a file and use that as an input instead a global variable
+[] Create a separate file to run the crypto functions
+[] Run the logic in a loop until user states to exit
+
+'''
+
+
 password = ''
+key = ''
 
 def passwordGenerator():
     ## TODO:
@@ -42,22 +66,76 @@ def openFile():
     print(file.read())
 
 def encryptFile():
-    print("encrypt")
+    global key
+
+    file = 'secret.txt'
+    output = 'test.encrypted'
+
+    with open(file, 'rb') as x:
+        data = x.read()
+
+        fernet = Fernet(key)
+        encrypted = fernet.encrypt(data)
+
+    with open(output, 'wb') as y:
+        y.write(encrypted)
+
+    os.remove("secret.txt")
 
 def decryptFile():
-    print("decrypt")
+    global key
+
+    file = 'test.encrypted'
+    output = 'secret.txt'
+
+    with open(file, 'rb') as x:
+        data = x.read()
+
+    fernet = Fernet(key)
+    encrypted = fernet.decrypt(data)
+
+    with open(output, 'wb') as x:
+        x.write(encrypted)
+
+    os.remove("test.encrypted")
+
+#user defined password to create a key with. This code is off a blog...
+def keyGenerator():
+    global key
+
+    input = raw_input("Password to encrypt/decrypt files with: ")
+    password = input.encode() # Convert to type bytes
+    salt = b'salt_' # CHANGE THIS - recommend using a key from os.urandom(16), must be of type bytes
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    key = base64.urlsafe_b64encode(kdf.derive(password)) # Can only use kdf once
+    print(key)
 
 
-response = raw_input("Please select an option you wish to perform: [view/gen] ")
+
+response = raw_input("Please select an option you wish to perform: [view/gen/exit] ")
 
 if response == "view":
+    keyGenerator()
     decryptFile()
     openFile()
 
 elif response == "gen":
     passwordGenerator()
     appendToFile()
+    keyGenerator()
     encryptFile()
+
+elif response == "exit"
+    encryptFile()
+
+elif response == "keygen":
+    keyGenerator()
 
 else:
     print("Please select a correct option...")
