@@ -11,9 +11,10 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
+from R99 import *
 
 '''
-Python based password generator. The main purpose of this program is
+Python 3.6+ based password generator. The main purpose of this program is
 to generate new passwords and save them to a text file. Then encrypt that file and/or
 decrypt that file for viewing.
 
@@ -29,12 +30,19 @@ TODO:
 [] Save the generated key to a file and use that as an input instead a global variable
 [] Create a separate file to run the crypto functions
 [] Run the logic in a loop until user states to exit
-[] Sudo password to gen key?
+
 '''
 
 
 password = ''
 key = ''
+
+def key():
+    global key
+
+    keyFile = open('key.key', 'rb')
+    key = keyFile.read() # The key will be type bytes
+    keyFile.close()
 
 def passwordGenerator():
     ## TODO:
@@ -99,43 +107,27 @@ def decryptFile():
 
     os.remove("test.encrypted")
 
-#user defined password to create a key with. This code is off a blog...
-def keyGenerator():
-    global key
-
-    input = raw_input("Password to encrypt/decrypt files with: ")
-    password = input.encode() # Convert to type bytes
-    salt = b'salt_' # CHANGE THIS - recommend using a key from os.urandom(16), must be of type bytes
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=32,
-        salt=salt,
-        iterations=100000,
-        backend=default_backend()
-    )
-    key = base64.urlsafe_b64encode(kdf.derive(password)) # Can only use kdf once
-    print(key)
-
 
 
 response = raw_input("Please select an option you wish to perform: [view/gen/exit] ")
 
 if response == "view":
-    keyGenerator()
+    key()
     decryptFile()
     openFile()
 
 elif response == "gen":
     passwordGenerator()
     appendToFile()
-    keyGenerator()
+    key()
     encryptFile()
 
-elif response == "exit"
+elif response == "exit":
+    key()
     encryptFile()
 
 elif response == "keygen":
-    keyGenerator()
+    setup()
 
 else:
     print("Please select a correct option...")
