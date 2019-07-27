@@ -30,12 +30,15 @@ TODO:
 [] Save the generated key to a file and use that as an input instead a global variable
 [] Create a separate file to run the crypto functions
 [] Run the logic in a loop until user states to exit
-
+[] Logic is broken. Maybe it needs be a loop and at the start of a loop it decrypts the file
+prior to running? Maybe this will fix this isue?
 '''
 
 
 password = ''
 key = ''
+loopInput = ''
+
 
 def key():
     global key
@@ -108,26 +111,29 @@ def decryptFile():
     os.remove("test.encrypted")
 
 
+#debugging with these....
+print("Files are being decrypted \n")
+key()
+decryptFile()
+#encryptFile()
 
-response = raw_input("Please select an option you wish to perform: [view/gen/exit] ")
+while loopInput != "exit":
 
-if response == "view":
-    key()
-    decryptFile()
-    openFile()
+    response = raw_input("Please select an option you wish to perform: [view/gen/exit] \n")
 
-elif response == "gen":
-    passwordGenerator()
-    appendToFile()
-    key()
-    encryptFile()
+    if response == "view":
+        openFile()
 
-elif response == "exit":
-    key()
-    encryptFile()
+    elif response == "gen":
+        passwordGenerator()
+        appendToFile()
 
-elif response == "keygen":
-    setup()
+    elif response == "keygen":
+        setup()
 
-else:
-    print("Please select a correct option...")
+    elif response == "exit":
+        encryptFile()
+        break
+
+    else:
+        print("Please select a correct option...")
