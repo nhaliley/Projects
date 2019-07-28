@@ -1,6 +1,7 @@
 import random
 import string
 import os
+import sys
 
 #These imports are needed for crypto
 import cryptography
@@ -14,7 +15,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from R99 import *
 
 '''
-Python 3.6+ based password generator. The main purpose of this program is
+Python based password generator. The main purpose of this program is
 to generate new passwords and save them to a text file. Then encrypt that file and/or
 decrypt that file for viewing.
 
@@ -38,7 +39,7 @@ prior to running? Maybe this will fix this isue?
 password = ''
 key = ''
 loopInput = ''
-
+arg = sys.argv[1]
 
 def key():
     global key
@@ -110,30 +111,46 @@ def decryptFile():
 
     os.remove("test.encrypted")
 
+def mainLoop():
 
-#debugging with these....
-print("Files are being decrypted \n")
-key()
-decryptFile()
-#encryptFile()
+    while loopInput != "exit":
 
-while loopInput != "exit":
+        response = raw_input("Please select an option you wish to perform: [view/gen/exit] \n")
 
-    response = raw_input("Please select an option you wish to perform: [view/gen/exit] \n")
+        if response == "view":
+            openFile()
 
-    if response == "view":
-        openFile()
+        elif response == "gen":
+            passwordGenerator()
+            appendToFile()
 
-    elif response == "gen":
-        passwordGenerator()
-        appendToFile()
+        elif response == "keygen":
+            setup()
 
-    elif response == "keygen":
-        setup()
+        elif response == "exit":
+            encryptFile()
+            break
 
-    elif response == "exit":
-        encryptFile()
-        break
+        else:
+            print("Please select a correct option...")
+
+def main():
+    if arg == "-setup":
+         setup()
+         open("secret.txt", "ab")
+         key()
+         encryptFile()
+
+    elif arg == "-run":
+        key()
+        decryptFile()
+        mainLoop()
+
+    elif arg =="-Backup":
+        print("Soon...")
 
     else:
-        print("Please select a correct option...")
+        print("Quiting...")
+
+if __name__ == '__main__':
+    main()
