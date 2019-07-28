@@ -32,6 +32,11 @@ def saveToFile():
     keyFile.write(key) # The key is type bytes still
     keyFile.close()
 
+def fileSetup():
+    with open("secret.txt", "ab") as secretFile:
+        secretFile.write("Website : User/Email : Password" + "\n")
+
 def setup():
+    fileSetup()
     keyGenerator()
     saveToFile()

@@ -2,6 +2,7 @@ import random
 import string
 import os
 import sys
+import shutil
 
 #These imports are needed for crypto
 import cryptography
@@ -12,7 +13,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-from keyGen.py import *
+from keyGen import *
 
 '''
 Python based password generator. The main purpose of this program is
@@ -35,7 +36,8 @@ TODO:
 prior to running? Maybe this will fix this isue?
 '''
 
-
+website = ''
+user = ''
 password = ''
 key = ''
 loopInput = ''
@@ -53,6 +55,8 @@ def passwordGenerator():
     # - need to add bad chars to be excluded
     # - add parameter for char length
     global password
+    global user
+    global website
 
     length = 32
     chars = string.ascii_letters + string.digits + '!@#$%^&*()'
@@ -60,7 +64,11 @@ def passwordGenerator():
     password = ''.join(random.choice(chars) for i in range(length))
 
     os.system("echo '%s' | pbcopy" % password)
-    print("New generated password: " + password)
+
+    website = raw_input("Enter the website \n")
+    user = raw_input("Enter the user for " + website + "\n")
+
+    print("New generated password for " + website + " is: " + password)
     print("Copied to the clipboard!")
 
 def appendToFile():
@@ -69,7 +77,7 @@ def appendToFile():
     # The bottom line writes and appends to the text file
     # secretFile is a var
     with open("secret.txt", "ab") as secretFile:
-        secretFile.write(password + "\n")
+        secretFile.write(website + " : " + user + " : " + password + "\n")
 
 def openFile():
     # var 'file' opens the secret text with option r for read. then we print
@@ -111,6 +119,10 @@ def decryptFile():
 
     os.remove("test.encrypted")
 
+#Copies the encrypted file onto the desktop
+def backup():
+    newLocation = shutil.copy('test.encrypted', '/Users/nazariyhaliley/Desktop')
+
 def mainLoop():
 
     while loopInput != "exit":
@@ -124,10 +136,8 @@ def mainLoop():
             passwordGenerator()
             appendToFile()
 
-        elif response == "keygen":
-            setup()
-
         elif response == "exit":
+            print("Encrypting the file... \n")
             encryptFile()
             break
 
@@ -137,7 +147,6 @@ def mainLoop():
 def main():
     if arg == "-setup":
          setup()
-         open("secret.txt", "ab")
          key()
          encryptFile()
 
@@ -146,8 +155,8 @@ def main():
         decryptFile()
         mainLoop()
 
-    elif arg =="-Backup":
-        print("Soon...")
+    elif arg =="-backup":
+        backup()
 
     else:
         print("Quiting...")
