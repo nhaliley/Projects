@@ -20,7 +20,7 @@ Python based password generator. The main purpose of this program is
 to generate new passwords and save them to a text file. Then encrypt that file and/or
 decrypt that file for viewing.
 
-Free to use and mod.
+Educational purposes
 
 Credit to: https://nitratine.net/blog/post/encryption-and-decryption-in-python/
 For help with encryption and decryption code
@@ -29,11 +29,8 @@ For help with encryption and decryption code
 
 '''
 TODO:
-[] Save the generated key to a file and use that as an input instead a global variable
-[] Create a separate file to run the crypto functions
-[] Run the logic in a loop until user states to exit
-[] Logic is broken. Maybe it needs be a loop and at the start of a loop it decrypts the file
-prior to running? Maybe this will fix this isue?
+[] Ask for the key to decrypt the file each time instead of reading it from a file
+[] Polish the formating
 '''
 
 website = ''
@@ -50,7 +47,7 @@ def key():
     key = keyFile.read() # The key will be type bytes
     keyFile.close()
 
-def passwordGenerator():
+def passwordGenerator(length):
     ## TODO:
     # - need to add bad chars to be excluded
     # - add parameter for char length
@@ -58,7 +55,6 @@ def passwordGenerator():
     global user
     global website
 
-    length = 32
     chars = string.ascii_letters + string.digits + '!@#$%^&*()'
     random.seed = (os.urandom(1024))
     password = ''.join(random.choice(chars) for i in range(length))
@@ -121,7 +117,7 @@ def decryptFile():
 
 #Copies the encrypted file onto the desktop
 def backup():
-    newLocation = shutil.copy('test.encrypted', '/Users/nazariyhaliley/Desktop')
+    newLocation = shutil.copy('test.encrypted', '/Users/NAME/Desktop')
 
 def mainLoop():
 
@@ -133,7 +129,8 @@ def mainLoop():
             openFile()
 
         elif response == "gen":
-            passwordGenerator()
+            length = raw_input("How many charecters? ")
+            passwordGenerator(length)
             appendToFile()
 
         elif response == "exit":
