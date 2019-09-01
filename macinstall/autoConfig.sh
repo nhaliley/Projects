@@ -268,7 +268,6 @@ settings(){
 	osascript -e 'tell application "System Events" to set require password to wake of security preferences to false' >/dev/null 2>>/tmp/Brew-Install-Log.txt
 
 	#FileVault
-	#Master password: AugustMac44$
 	echo -e "   $yellow ➔ $white Enabled FileVault..."
 	cp /Volumes/macinstall/FileVault\ Keys/FileVaultMasterModified.keychain /Library/Keychains/FileVaultMaster.keychain >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	chown root:wheel /Library/Keychains/FileVaultMaster.keychain >/dev/null 2>>/tmp/Brew-Install-Log.txt
