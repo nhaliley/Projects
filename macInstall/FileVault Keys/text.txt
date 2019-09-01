@@ -1,0 +1,3 @@
+Main script keychain file goies in here. Used for enterprise encryption.
+
+FileVaultMaster.keychain
