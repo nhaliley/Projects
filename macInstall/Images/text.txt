@@ -1,0 +1,4 @@
+Main script looks for image files in this location.
+
+Profile.png
+BF-Background.jpg
