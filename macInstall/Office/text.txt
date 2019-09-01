@@ -1,0 +1,8 @@
+Office installers go in here. Main script looks for the following file names...
+
+Microsoft_Excel.pkg
+Microsoft_OneNote.pkg
+Microsoft_Outlook.pkg
+Microsoft_PowerPoint.pkg
+Microsoft_Teams.pkg
+Microsoft_Word.pkg
