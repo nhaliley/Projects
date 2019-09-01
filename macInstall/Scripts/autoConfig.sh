@@ -275,7 +275,7 @@ settings(){
 	chmod 644 /Library/Keychains/FileVaultMaster.keychain >/dev/null 2>>/tmp/Brew-Install-Log.txt
 	FULLNAME=$(finger $user | grep Name | sed 's/.*Name: //g')
 
-	fdesetup enable -keychain -user $user -password $PASSWORD > /Volumes/macinstall/Recovery\ Keys/"$FULLNAME"\ File\ Recovery\ Key.txt 2>>/tmp/Brew-Install-Log.txt
+	fdesetup enable -keychain -user $user -password $PASSWORD > /Volumes/macinstall/Recovery\ Keys/"$FULLNAME"\ FileVault\ Recovery\ Key.txt 2>>/tmp/Brew-Install-Log.txt
 
 	#Firewall
 	echo -e "   $yellow ➔ $white Enabled firewall..."
