@@ -1,0 +1,3 @@
+FileFault recovery key is dumped in this folder.
+
+Full Name FileVault Recovery Key.txt
